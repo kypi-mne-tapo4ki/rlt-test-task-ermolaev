@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from enum import Enum
 
 import motor.motor_asyncio
+from config import get_mongo_args
 
 
 class GroupType(Enum):
@@ -19,9 +20,10 @@ class TimePattern(Enum):
 
 async def aggregate_salary_data(dt_from, dt_upto, group_type):
     # Create a connection to MongoDB
-    client = motor.motor_asyncio.AsyncIOMotorClient("mongodb://localhost:27017/")
-    db = client["RLT_test_task_db"]
-    collection = db["sample_collection"]
+    mongo_uri, mongo_db, mongo_collection = get_mongo_args()
+    client = motor.motor_asyncio.AsyncIOMotorClient(mongo_uri)
+    db = client[mongo_db]
+    collection = db[mongo_collection]
 
     # Prepare the data
     dt_from = datetime.fromisoformat(dt_from)
